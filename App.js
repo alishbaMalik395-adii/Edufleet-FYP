@@ -27,9 +27,11 @@ import PaymentSuccessScreen from './screens/PaymentSuccessScreen';
 
 import TrackingScreen from './screens/TrackingScreen';
 import MessagesScreen from './screens/MessagesScreen';
+import ChatScreen from './screens/ChatScreen';   // ✅ ADD THIS
 import ComplaintScreen from './screens/ComplaintScreen';
 import ComplaintSuccessScreen from './screens/ComplaintSuccessScreen';
 import UserProfileScreen from './screens/UserProfileScreen';
+import EditProfileScreen from './screens/EditProfileScreen';
 
 // ===== CONTEXT =====
 import { RideProvider } from './context/RideContext';
@@ -65,15 +67,21 @@ export default function App() {
           <Stack.Screen name="ViewChallan" component={ViewChallanScreen} />
           <Stack.Screen name="DownloadChallan" component={DownloadChallan} />
 
-          <Stack.Screen name="Payment" component={PaymentScreen} />
+          <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
           <Stack.Screen name="PaymentProcessing" component={PaymentProcessingScreen} />
           <Stack.Screen name="PaymentSuccess" component={PaymentSuccessScreen} />
 
           <Stack.Screen name="TrackingScreen" component={TrackingScreen} />
           <Stack.Screen name="MessagesScreen" component={MessagesScreen} />
+
+          {/* ✅ CHAT SCREEN */}
+          <Stack.Screen name="ChatScreen" component={ChatScreen} />
+
           <Stack.Screen name="ComplaintScreen" component={ComplaintScreen} />
           <Stack.Screen name="ComplaintSuccess" component={ComplaintSuccessScreen} />
           <Stack.Screen name="UserProfileScreen" component={UserProfileScreen} />
+          <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
+
 
         </Stack.Navigator>
       </NavigationContainer>
