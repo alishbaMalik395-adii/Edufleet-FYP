@@ -18,18 +18,27 @@ export default function DriverLiveMapScreen({ route }) {
   const [location, setLocation] = useState(null);
   const [hasPermission, setHasPermission] = useState(false);
 
-  // ✅ ASK PERMISSION (HOOK ALWAYS TOP LEVEL)
+  // 🔐 REQUEST LOCATION PERMISSION
   useEffect(() => {
     const requestPermission = async () => {
       if (Platform.OS === "android") {
         const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          {
+            title: "Location Permission",
+            message:
+              "App needs access to your location to show live bus tracking",
+            buttonPositive: "OK",
+          }
         );
 
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
           setHasPermission(true);
         } else {
-          Alert.alert("Permission denied", "Location permission required");
+          Alert.alert(
+            "Permission Required",
+            "Please allow location permission to continue"
+          );
         }
       } else {
         setHasPermission(true);
@@ -39,29 +48,29 @@ export default function DriverLiveMapScreen({ route }) {
     requestPermission();
   }, []);
 
-  // ❌ Ride not started warning
+  // ⚠️ RIDE STATUS CHECK
   useEffect(() => {
     if (!rideStarted) {
       Alert.alert(
         "Ride not started",
-        "Please start ride first to see live location"
+        "Please start the ride first to see live location"
       );
     }
   }, [rideStarted]);
 
-  // 📍 GET LOCATION (NO CONDITIONAL HOOK)
+  // 📍 LIVE LOCATION TRACKING
   useEffect(() => {
     if (!rideStarted || !hasPermission) return;
 
     const watchId = Geolocation.watchPosition(
-      (pos) => {
+      (position) => {
         setLocation({
-          latitude: pos.coords.latitude,
-          longitude: pos.coords.longitude,
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
         });
       },
       (error) => {
-        console.log(error);
+        console.log("Location error:", error);
       },
       {
         enableHighAccuracy: true,
@@ -69,7 +78,9 @@ export default function DriverLiveMapScreen({ route }) {
       }
     );
 
-    return () => Geolocation.clearWatch(watchId);
+    return () => {
+      Geolocation.clearWatch(watchId);
+    };
   }, [rideStarted, hasPermission]);
 
   return (
@@ -80,6 +91,7 @@ export default function DriverLiveMapScreen({ route }) {
     >
       <View style={styles.overlay} />
 
+      {/* HEADER */}
       <View style={styles.header}>
         <Icon name="map-outline" size={26} color="#fff" />
         <Text style={styles.headerText}>
@@ -87,22 +99,30 @@ export default function DriverLiveMapScreen({ route }) {
         </Text>
       </View>
 
+      {/* MAP */}
       <View style={styles.mapCard}>
-        {location ? (
-          <MapView
-            style={{ flex: 1 }}
-            initialRegion={{
-              latitude: location.latitude,
-              longitude: location.longitude,
-              latitudeDelta: 0.01,
-              longitudeDelta: 0.01,
-            }}
-            showsUserLocation
-          >
-            <Marker coordinate={location} title="Bus Live Location" />
-          </MapView>
-        ) : (
-          <Text style={styles.loadingText}>Fetching live location...</Text>
+        <MapView
+          style={{ flex: 1 }}
+          showsUserLocation
+          region={{
+            latitude: location?.latitude || 33.6844,
+            longitude: location?.longitude || 73.0479,
+            latitudeDelta: 0.01,
+            longitudeDelta: 0.01,
+          }}
+        >
+          {location && (
+            <Marker
+              coordinate={location}
+              title="Bus Live Location"
+            />
+          )}
+        </MapView>
+
+        {!location && (
+          <Text style={styles.loadingText}>
+            Fetching live location...
+          </Text>
         )}
       </View>
     </ImageBackground>
@@ -137,9 +157,11 @@ const styles = StyleSheet.create({
     elevation: 20,
   },
   loadingText: {
+    position: "absolute",
+    top: 20,
+    alignSelf: "center",
     color: "#fff",
-    textAlign: "center",
-    marginTop: 20,
     fontSize: 16,
+    fontWeight: "600",
   },
 });

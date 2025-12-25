@@ -32,6 +32,9 @@ import ComplaintScreen from './screens/ComplaintScreen';
 import ComplaintSuccessScreen from './screens/ComplaintSuccessScreen';
 import UserProfileScreen from './screens/UserProfileScreen';
 import EditProfileScreen from './screens/EditProfileScreen';
+import StartRideScreen from './screens/StartRideScreen';
+import DriverNotificationsScreen from "./screens/DriverNotificationsScreen";
+
 
 // ===== CONTEXT =====
 import { RideProvider } from './context/RideContext';
@@ -81,6 +84,9 @@ export default function App() {
           <Stack.Screen name="ComplaintSuccess" component={ComplaintSuccessScreen} />
           <Stack.Screen name="UserProfileScreen" component={UserProfileScreen} />
           <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
+          <Stack.Screen name="StartRideScreen" component={StartRideScreen} />
+          <Stack.Screen name="DriverNotifications" component={DriverNotificationsScreen} />
+
 
 
         </Stack.Navigator>
