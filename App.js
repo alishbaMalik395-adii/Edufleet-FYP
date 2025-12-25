@@ -1,43 +1,29 @@
 import 'react-native-gesture-handler';
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 // ===== SCREENS =====
-import SplashScreen from './screens/SplashScreen';
-import HomeScreen from './screens/HomeScreen';
-import AdminLoginScreen from './screens/AdminLoginScreen';
-import DriverLoginScreen from './screens/DriverLoginScreen';
-import UserLoginScreen from './screens/UserLoginScreen';
+import SplashScreen from "./screens/SplashScreen";
+import HomeScreen from "./screens/HomeScreen";
+import AdminLoginScreen from "./screens/AdminLoginScreen";
+import DriverLoginScreen from "./screens/DriverLoginScreen";
+import UserLoginScreen from "./screens/UserLoginScreen";
 
-import DriverDashboard from './screens/DriverDashboard';
-import UserDashboardScreen from './screens/UserDashboardScreen';
+import DriverDashboard from "./screens/DriverDashboard";
+import UserDashboardScreen from "./screens/UserDashboardScreen";
 
-import BusSelectionScreen from './screens/BusSelectionScreen';
-import DriverLiveMapScreen from './screens/DriverLiveMapScreen';
+import BusSelectionScreen from "./screens/BusSelectionScreen";
+import DriverLiveMapScreen from "./screens/DriverLiveMapScreen";
 
-// USER FLOW SCREENS
-import ChallanScreen from './screens/ChallanScreen';
-import ViewChallanScreen from './screens/ViewChallanScreen';
-import DownloadChallan from './screens/DownloadChallan';
+import MessagesScreen from "./screens/MessagesScreen";
+import ChatScreen from "./screens/ChatScreen";
 
-import PaymentScreen from './screens/PaymentScreen';
-import PaymentProcessingScreen from './screens/PaymentProcessingScreen';
-import PaymentSuccessScreen from './screens/PaymentSuccessScreen';
-
-import TrackingScreen from './screens/TrackingScreen';
-import MessagesScreen from './screens/MessagesScreen';
-import ChatScreen from './screens/ChatScreen';   // ✅ ADD THIS
-import ComplaintScreen from './screens/ComplaintScreen';
-import ComplaintSuccessScreen from './screens/ComplaintSuccessScreen';
-import UserProfileScreen from './screens/UserProfileScreen';
-import EditProfileScreen from './screens/EditProfileScreen';
-import StartRideScreen from './screens/StartRideScreen';
-import DriverNotificationsScreen from "./screens/DriverNotificationsScreen";
-
+import DriverProfileScreen from "./screens/DriverProfileScreen";
+import DriverEditProfileScreen from "./screens/DriverEditProfileScreen";
 
 // ===== CONTEXT =====
-import { RideProvider } from './context/RideContext';
+import { RideProvider } from "./context/RideContext";
 
 const Stack = createNativeStackNavigator();
 
@@ -49,7 +35,6 @@ export default function App() {
           initialRouteName="Splash"
           screenOptions={{ headerShown: false }}
         >
-
           {/* AUTH */}
           <Stack.Screen name="Splash" component={SplashScreen} />
           <Stack.Screen name="Home" component={HomeScreen} />
@@ -62,33 +47,28 @@ export default function App() {
           <Stack.Screen name="UserDashboard" component={UserDashboardScreen} />
 
           {/* DRIVER FLOW */}
-          <Stack.Screen name="BusSelectionScreen" component={BusSelectionScreen} />
-          <Stack.Screen name="DriverLiveMap" component={DriverLiveMapScreen} />
+          <Stack.Screen
+            name="BusSelectionScreen"
+            component={BusSelectionScreen}
+          />
+          <Stack.Screen
+            name="DriverLiveMap"
+            component={DriverLiveMapScreen}
+          />
 
-          {/* USER FLOW */}
-          <Stack.Screen name="Challan" component={ChallanScreen} />
-          <Stack.Screen name="ViewChallan" component={ViewChallanScreen} />
-          <Stack.Screen name="DownloadChallan" component={DownloadChallan} />
-
-          <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
-          <Stack.Screen name="PaymentProcessing" component={PaymentProcessingScreen} />
-          <Stack.Screen name="PaymentSuccess" component={PaymentSuccessScreen} />
-
-          <Stack.Screen name="TrackingScreen" component={TrackingScreen} />
+          {/* CHAT */}
           <Stack.Screen name="MessagesScreen" component={MessagesScreen} />
-
-          {/* ✅ CHAT SCREEN */}
           <Stack.Screen name="ChatScreen" component={ChatScreen} />
 
-          <Stack.Screen name="ComplaintScreen" component={ComplaintScreen} />
-          <Stack.Screen name="ComplaintSuccess" component={ComplaintSuccessScreen} />
-          <Stack.Screen name="UserProfileScreen" component={UserProfileScreen} />
-          <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
-          <Stack.Screen name="StartRideScreen" component={StartRideScreen} />
-          <Stack.Screen name="DriverNotifications" component={DriverNotificationsScreen} />
-
-
-
+          {/* PROFILE */}
+          <Stack.Screen
+            name="DriverProfile"
+            component={DriverProfileScreen}
+          />
+          <Stack.Screen
+            name="DriverEditProfile"
+            component={DriverEditProfileScreen}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </RideProvider>

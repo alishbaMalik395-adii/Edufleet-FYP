@@ -50,7 +50,7 @@ const UserLoginScreen = () => {
         {/* EMAIL */}
         <TextInput
           style={styles.input}
-          placeholder="Enter Gmail (example@gmail.com)"
+          placeholder="Enter Gmail"
           placeholderTextColor="#999"
           value={email}
           onChangeText={setEmail}
