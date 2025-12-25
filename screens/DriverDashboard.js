@@ -18,7 +18,6 @@ const DriverDashboard = () => {
   const [rideStarted, setRideStarted] = useState(false);
   const [busNo, setBusNo] = useState(null);
 
-  // Receive data after ride start
   useEffect(() => {
     if (route.params?.rideStarted) {
       setRideStarted(true);
@@ -41,53 +40,56 @@ const DriverDashboard = () => {
         <View style={styles.grid}>
           <GlassCard
             title="Start Ride"
-            icon="play"
+            icon="play-circle-outline"
             desc="Begin Trip"
             onPress={() => navigation.navigate("BusSelectionScreen")}
           />
 
           <GlassCard
             title="Live Map"
-            icon="map"
+            icon="map-outline"
             desc="Real-time Location"
             onPress={() => {
               if (!rideStarted) {
-                Alert.alert(
-                  "⚠ Ride Not Started",
-                  "Please start ride first"
-                );
+                Alert.alert("⚠ Ride Not Started", "Please start ride first");
                 return;
               }
-
-              navigation.navigate("DriverLiveMap", {
-                busNo: busNo,
-              });
+              navigation.navigate("DriverLiveMap", { busNo });
             }}
           />
 
+          {/* ✅ UPDATED MESSAGES CARD */}
           <GlassCard
             title="Messages"
-            icon="chatbubble"
+            icon="chatbubble-ellipses-outline"
             desc="Student Alerts"
+            onPress={() =>
+              navigation.navigate("MessagesScreen", {
+                role: "driver",
+                busId: busNo || "BUS-01", // frontend dummy
+              })
+            }
           />
 
           <GlassCard
             title="Notifications"
-            icon="notifications"
+            icon="notifications-outline"
             desc="Manager Alerts"
+            onPress={() => navigation.navigate("DriverNotifications")}
           />
 
           <GlassCard
             title="Route"
-            icon="navigate"
+            icon="navigate-outline"
             desc="Assigned Route"
           />
 
           <GlassCard
             title="Profile"
-            icon="person"
+            icon="person-outline"
             desc="View Details"
           />
+           
         </View>
       </View>
     </ImageBackground>
@@ -95,7 +97,11 @@ const DriverDashboard = () => {
 };
 
 const GlassCard = ({ title, desc, icon, onPress }) => (
-  <TouchableOpacity style={styles.card} onPress={onPress}>
+  <TouchableOpacity
+    style={styles.card}
+    activeOpacity={0.85}
+    onPress={onPress}
+  >
     <Icon name={icon} size={42} color="#fff" style={{ marginBottom: 10 }} />
     <Text style={styles.cardTitle}>{title}</Text>
     <Text style={styles.cardDesc}>{desc}</Text>
@@ -103,33 +109,37 @@ const GlassCard = ({ title, desc, icon, onPress }) => (
 );
 
 const styles = StyleSheet.create({
-  bg: {
-    flex: 1,
-  },
+  bg: { flex: 1 },
+
   overlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: "rgba(0,0,0,0.35)",
   },
+
   container: {
     paddingTop: 80,
     paddingHorizontal: 22,
   },
+
   title: {
     fontSize: 32,
     fontWeight: "800",
     color: "#fff",
   },
+
   subtitle: {
     fontSize: 17,
     marginTop: 6,
     color: "#e8e8e8",
   },
+
   grid: {
     marginTop: 35,
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
   },
+
   card: {
     width: "47%",
     height: 160,
@@ -141,11 +151,13 @@ const styles = StyleSheet.create({
     borderColor: "rgba(255,255,255,0.66)",
     elevation: 20,
   },
+
   cardTitle: {
     fontSize: 20,
     fontWeight: "700",
     color: "#fff",
   },
+
   cardDesc: {
     marginTop: 4,
     fontSize: 13,

@@ -22,6 +22,7 @@ export default function BusSelectionScreen({ navigation }) {
   const renderBus = ({ item }) => (
     <TouchableOpacity
       style={styles.card}
+      activeOpacity={0.85}
       onPress={() =>
         navigation.navigate("StartRideScreen", {
           busNo: item.busNo,
@@ -30,7 +31,7 @@ export default function BusSelectionScreen({ navigation }) {
       }
     >
       <View style={styles.iconWrap}>
-        <Icon name="bus-outline" size={40} color="#fff" />
+        <Icon name="bus-outline" size={38} color="#fff" />
       </View>
 
       <View style={{ flex: 1 }}>
@@ -46,8 +47,9 @@ export default function BusSelectionScreen({ navigation }) {
     <ImageBackground
       source={require("../assets/background.jpg")}
       style={styles.bg}
-      blurRadius={1}
+      blurRadius={1}   // ✅ same as dashboard
     >
+      {/* ✅ SAME DARK OVERLAY */}
       <View style={styles.overlay} />
 
       <View style={styles.container}>
@@ -61,6 +63,7 @@ export default function BusSelectionScreen({ navigation }) {
           keyExtractor={(item) => item.id}
           renderItem={renderBus}
           showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 30 }}
         />
       </View>
     </ImageBackground>
@@ -68,30 +71,39 @@ export default function BusSelectionScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  bg: { flex: 1 },
+  bg: {
+    flex: 1,
+  },
+
+  // 🔥 EXACT SAME OVERLAY
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0,0,0,0.35)",
+    backgroundColor: "rgba(0, 0, 0, 0.09)",
   },
+
   container: {
-    paddingTop: 80,
+    paddingTop: 40,
     paddingHorizontal: 22,
   },
+
   title: {
     fontSize: 32,
     fontWeight: "800",
-    color: "#fff",
+    color: "#ffffffff",
   },
+
   subtitle: {
-    fontSize: 17,
+    fontSize: 16,
     marginTop: 6,
-    marginBottom: 25,
+    marginBottom: 28,
     color: "#eaeaea",
   },
+
+  // 🔥 GLASS CARD (dashboard feel)
   card: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(255,255,255,0.28)",
+    backgroundColor: "rgba(255, 255, 255, 0.28)",
     borderRadius: 22,
     padding: 18,
     marginBottom: 16,
@@ -99,20 +111,23 @@ const styles = StyleSheet.create({
     borderColor: "rgba(255,255,255,0.66)",
     elevation: 18,
   },
+
   iconWrap: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: "rgba(0,0,0,0.35)",
+    width: 58,
+    height: 58,
+    borderRadius: 29,
+    backgroundColor: "rgba(0, 0, 0, 0.49)",
     justifyContent: "center",
     alignItems: "center",
     marginRight: 15,
   },
+
   busNo: {
     fontSize: 22,
     fontWeight: "800",
     color: "#fff",
   },
+
   route: {
     fontSize: 14,
     marginTop: 4,
