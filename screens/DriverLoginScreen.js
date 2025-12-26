@@ -1,72 +1,86 @@
-// DriverLoginScreen.js
-import React, { useState } from 'react';
+// Screens/DriverLoginScreen.js
+import React, { useState } from "react";
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
   ImageBackground,
+  StyleSheet,
   Alert,
-  KeyboardAvoidingView,
-  Platform,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 const DriverLoginScreen = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigation = useNavigation();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
 
   const handleLogin = () => {
-    if (username === 'driver' && password === '12345') {
-      navigation.navigate("DriverDashboard");
-
-      Alert.alert('✅ Login Successful', 'Welcome back, Driver!');
-    } else {
-      Alert.alert('❌ Login Failed', 'Invalid username or password');
+    // BASIC VALIDATION
+    if (!email || !password) {
+      Alert.alert("⚠️ Missing Fields", "Please enter email and password");
+      return;
     }
+
+    if (!email.includes("@gmail.com")) {
+      Alert.alert("❌ Invalid Email", "Please use a valid Gmail address");
+      return;
+    }
+
+    // ✅ FRONTEND LOGIN (Driver)
+    navigation.navigate("DriverDashboard", {
+      driverEmail: email, // 🔥 email pass ho rahi hai
+    });
   };
 
   return (
     <ImageBackground
-      source={require('../assets/background.jpg')}
+      source={require("../assets/background.jpg")}
       style={styles.background}
     >
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.overlay}
-      >
-        <View style={styles.loginBox}>
-          <Text style={styles.title}>Driver Login</Text>
-          <Text style={styles.subtitle}>Access your driving dashboard</Text>
+      <View style={styles.container}>
+        <Text style={styles.title}>Driver Login</Text>
+        <Text style={styles.subtitle}>
+          Login using your Gmail
+        </Text>
 
-          <TextInput
-            style={styles.input}
-            placeholder="Enter Username"
-            placeholderTextColor="#777"
-            value={username}
-            onChangeText={setUsername}
-          />
+        {/* EMAIL */}
+        <TextInput
+          style={styles.input}
+          placeholder="Enter Gmail"
+          placeholderTextColor="#999"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
 
-          <TextInput
-            style={styles.input}
-            placeholder="Enter Password"
-            placeholderTextColor="#777"
-            secureTextEntry
-            value={password}
-            onChangeText={setPassword}
-          />
+        {/* PASSWORD */}
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          placeholderTextColor="#999"
+          secureTextEntry
+          value={password}
+          onChangeText={setPassword}
+        />
 
-          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-            <Text style={styles.loginButtonText}>LOGIN</Text>
-          </TouchableOpacity>
+        {/* LOGIN */}
+        <TouchableOpacity style={styles.button} onPress={handleLogin}>
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
+        
 
-          <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Home')}>
-            <Text style={styles.backText}>← Back to Home</Text>
-          </TouchableOpacity>
-        </View>
-      </KeyboardAvoidingView>
+        <TouchableOpacity
+           style={styles.backButton}
+           onPress={() => navigation.navigate('Home')} 
+          >
+            <Text style={styles.backText}> Back to Home</Text>
+            </TouchableOpacity>
+
+        
+      </View>
     </ImageBackground>
   );
 };
@@ -74,79 +88,64 @@ const DriverLoginScreen = () => {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    resizeMode: 'cover',
+    justifyContent: "center",
+    alignItems: "center",
   },
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  loginBox: {
-    width: '90%',
-    backgroundColor: 'rgba(255, 255, 255, 0.55)',
-    borderRadius: 20,
-    paddingVertical: 40,
-    paddingHorizontal: 25,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
+
+  container: {
+    backgroundColor: "rgba(255, 255, 255, 0.49)",
+    borderRadius: 25,
+    padding: 25,
+    width: "85%",
+    alignItems: "center",
     elevation: 8,
   },
+
   title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#28A745', // ✅ Green theme for Driver
-    marginBottom: 8,
-    textAlign: 'center',
+    fontSize: 36,
+    fontWeight: "bold",
+    color: '#2C3E50', // 🔥 Driver theme (green)
+    marginBottom: 10,
   },
+
   subtitle: {
-    fontSize: 16,
-    color: '#444',
-    marginBottom: 30,
-    textAlign: 'center',
-  },
-  input: {
-    width: '100%',
-    height: 50,
-    borderWidth: 1,
-    borderColor: '#28A745',
-    borderRadius: 12,
-    paddingHorizontal: 15,
-    marginBottom: 20,
-    backgroundColor: '#f9f9f9',
-    shadowColor: '#28A745',
-    shadowOpacity: 0.15,
-    shadowRadius: 3,
-  },
-  loginButton: {
-    width: '100%',
-    height: 50,
-    backgroundColor: '#28A745',
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 10,
-    shadowColor: '#28A745',
-    shadowOpacity: 0.4,
-    shadowRadius: 6,
-  },
-  loginButtonText: {
-    color: '#fff',
     fontSize: 18,
-    fontWeight: '700',
-    letterSpacing: 1,
+    color: "#555",
+    marginBottom: 30,
+  },
+
+  input: {
+    width: "100%",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 15,
+    fontSize: 16,
+    backgroundColor: "#fff",
+  },
+
+  button: {
+    backgroundColor: '#2C3E50',
+    paddingVertical: 14,
+    borderRadius: 10,
+    width: "100%",
+    alignItems: "center",
+  },
+
+  buttonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "600",
   },
   backButton: {
     marginTop: 20,
   },
-  backText: {
-    color: '#28A745',
+  backText:{
+    color: '#2C3E50',
     fontSize: 16,
-    fontWeight: '600',
-  },
+    fontWeight:'600'
+  }
 });
 
 export default DriverLoginScreen;

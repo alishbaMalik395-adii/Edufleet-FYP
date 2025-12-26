@@ -76,18 +76,28 @@ const DriverDashboard = () => {
             icon="notifications-outline"
             desc="Manager Alerts"
             onPress={() => navigation.navigate("DriverNotifications")}
+            //onPress={() => navigation.navigate("RouteInformationScreen")}
+
           />
 
           <GlassCard
             title="Route"
             icon="navigate-outline"
             desc="Assigned Route"
+           // onPress={() => navigation.navigate("RouteInformationScreen")}
+            onPress={() => navigation.navigate("RouteSelection")}
+            
           />
 
           <GlassCard
             title="Profile"
             icon="person-outline"
             desc="View Details"
+            onPress={() =>
+              navigation.navigate("DriverProfile", {
+                driverEmail: route.params?.driverEmail,
+              })
+            }
           />
            
         </View>
