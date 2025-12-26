@@ -21,7 +21,21 @@ import ChatScreen from "./screens/ChatScreen";
 
 import DriverProfileScreen from "./screens/DriverProfileScreen";
 import DriverEditProfileScreen from "./screens/DriverEditProfileScreen";
-
+import StartRideScreen from "./screens/StartRideScreen";
+import ChallanScreen from "./screens/ChallanScreen";
+import DriverNotificationsScreen from "./screens/DriverNotificationsScreen";
+import RouteSelectionScreen from "./screens/RouteSelectionScreen";
+import ViewChallanScreen from "./screens/ViewChallanScreen";
+import RouteInformationScreen from "./screens/RouteInformationScreen";
+import DownloadChallan from "./screens/DownloadChallan";
+import PaymentScreen from "./screens/PaymentScreen";
+import PaymentProcessingScreen from "./screens/PaymentProcessingScreen";
+import PaymentSuccessScreen from "./screens/PaymentSuccessScreen";
+import TrackingScreen from "./screens/TrackingScreen";
+import ComplaintScreen from "./screens/ComplaintScreen";
+import ComplaintSuccessScreen from "./screens/ComplaintSuccessScreen";
+import UserProfileScreen from "./screens/UserProfileScreen";
+import EditProfileScreen from "./screens/EditProfileScreen";
 // ===== CONTEXT =====
 import { RideProvider } from "./context/RideContext";
 
@@ -41,11 +55,20 @@ export default function App() {
           <Stack.Screen name="AdminLogin" component={AdminLoginScreen} />
           <Stack.Screen name="DriverLogin" component={DriverLoginScreen} />
           <Stack.Screen name="UserLogin" component={UserLoginScreen} />
+          
+          <Stack.Screen name="Challan" component={ChallanScreen} />
 
           {/* DASHBOARDS */}
           <Stack.Screen name="DriverDashboard" component={DriverDashboard} />
           <Stack.Screen name="UserDashboard" component={UserDashboardScreen} />
-
+          <Stack.Screen name="StartRideScreen" component={StartRideScreen} />
+          <Stack.Screen name="DriverNotifications" component={DriverNotificationsScreen} />
+          <Stack.Screen name="RouteSelection" component={RouteSelectionScreen} />
+          <Stack.Screen name="RouteInformationScreen" component={RouteInformationScreen} />
+          <Stack.Screen name="ViewChallan" component={ViewChallanScreen} />
+          <Stack.Screen name="DownloadChallan" component={DownloadChallan} />
+          <Stack.Screen name="ComplaintScreen" component={ComplaintScreen} />
+          
           {/* DRIVER FLOW */}
           <Stack.Screen
             name="BusSelectionScreen"
@@ -59,6 +82,13 @@ export default function App() {
           {/* CHAT */}
           <Stack.Screen name="MessagesScreen" component={MessagesScreen} />
           <Stack.Screen name="ChatScreen" component={ChatScreen} />
+          <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
+          <Stack.Screen name="PaymentProcessing" component={PaymentProcessingScreen} />
+          <Stack.Screen name="PaymentSuccess" component={PaymentSuccessScreen} />
+          <Stack.Screen name="TrackingScreen" component={TrackingScreen} />
+          <Stack.Screen name="ComplaintSuccess" component={ComplaintSuccessScreen} />
+          <Stack.Screen name="UserProfileScreen" component={UserProfileScreen} />
+          <Stack.Screen name="EditProfileScreen" component={EditProfileScreen} />
 
           {/* PROFILE */}
           <Stack.Screen

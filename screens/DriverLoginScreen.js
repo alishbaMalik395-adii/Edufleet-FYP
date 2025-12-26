@@ -70,6 +70,16 @@ const DriverLoginScreen = () => {
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
+        
+
+        <TouchableOpacity
+           style={styles.backButton}
+           onPress={() => navigation.navigate('Home')} 
+          >
+            <Text style={styles.backText}> Back to Home</Text>
+            </TouchableOpacity>
+
+        
       </View>
     </ImageBackground>
   );
@@ -128,6 +138,14 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
   },
+  backButton: {
+    marginTop: 20,
+  },
+  backText:{
+    color: '#2C3E50',
+    fontSize: 16,
+    fontWeight:'600'
+  }
 });
 
 export default DriverLoginScreen;
