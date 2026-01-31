@@ -106,7 +106,6 @@ const styles = StyleSheet.create({
     borderRadius: 26,
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.6)",
-    elevation: 18,
   },
 
   title: {

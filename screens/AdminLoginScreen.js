@@ -13,16 +13,28 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-
-
 const AdminLoginScreen = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const navigation = useNavigation(); // ✅ initialize navigation
+  const navigation = useNavigation();
 
   const handleLogin = () => {
+    // simple demo authentication
     if (username === 'admin' && password === '12345') {
-      Alert.alert('✅ Login Successful', 'Welcome back, Admin!');
+      Alert.alert(
+        '⚠️ Web Access Only',
+        'Admin dashboard is available on web portal only.\n\nPlease use the web application for admin operations.',
+        [
+          {
+            text: 'OK',
+            onPress: () => {
+              setUsername('');
+              setPassword('');
+              navigation.navigate('Home');
+            },
+          },
+        ]
+      );
     } else {
       Alert.alert('❌ Login Failed', 'Invalid username or password');
     }
@@ -30,7 +42,7 @@ const AdminLoginScreen = () => {
 
   return (
     <ImageBackground
-      source={require('../assets/background.jpg')} // ✅ same as HomeScreen
+      source={require('../assets/background.jpg')}
       style={styles.background}
     >
       <KeyboardAvoidingView
@@ -61,14 +73,13 @@ const AdminLoginScreen = () => {
           <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
             <Text style={styles.loginButtonText}>LOGIN</Text>
           </TouchableOpacity>
+
           <TouchableOpacity
             style={styles.backButton}
-            onPress={() => navigation.navigate('Home')} // ✅ navigate to Home
+            onPress={() => navigation.navigate('Home')}
           >
             <Text style={styles.backText}> Back to Home</Text>
           </TouchableOpacity>
-
-          
         </View>
       </KeyboardAvoidingView>
     </ImageBackground>
@@ -97,7 +108,6 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOpacity: 0.3,
     shadowRadius: 10,
-    elevation: 8,
   },
   title: {
     fontSize: 32,

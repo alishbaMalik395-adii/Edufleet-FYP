@@ -74,6 +74,8 @@ const UserDashboardScreen = ({ navigation, route }) => {
             onPress={() =>
   navigation.navigate("UserProfileScreen", {
     userEmail: userEmail,
+    regNo: route?.params?.regNo,
+    userName: route?.params?.userName,
   })
 }
 
@@ -146,7 +148,6 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.66)',
     backdropFilter: "blur(10px)", // iOS only
 
-    elevation: 20,
     shadowColor: "#000",
     shadowOpacity: 0.3,
     shadowRadius: 8,

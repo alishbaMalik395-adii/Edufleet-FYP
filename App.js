@@ -3,6 +3,9 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
+// ===== PUSH NOTIFICATION =====
+import './src/config/PushNotification';
+
 // ===== SCREENS =====
 import SplashScreen from "./screens/SplashScreen";
 import HomeScreen from "./screens/HomeScreen";
@@ -38,17 +41,19 @@ import UserProfileScreen from "./screens/UserProfileScreen";
 import EditProfileScreen from "./screens/EditProfileScreen";
 // ===== CONTEXT =====
 import { RideProvider } from "./context/RideContext";
+import { NotificationProvider } from "./context/NotificationContext";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <RideProvider>
-      <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName="Splash"
-          screenOptions={{ headerShown: false }}
-        >
+    <NotificationProvider>
+      <RideProvider>
+        <NavigationContainer>
+          <Stack.Navigator
+            initialRouteName="Splash"
+            screenOptions={{ headerShown: false }}
+          >
           {/* AUTH */}
           <Stack.Screen name="Splash" component={SplashScreen} />
           <Stack.Screen name="Home" component={HomeScreen} />
@@ -102,5 +107,6 @@ export default function App() {
         </Stack.Navigator>
       </NavigationContainer>
     </RideProvider>
+    </NotificationProvider>
   );
 }

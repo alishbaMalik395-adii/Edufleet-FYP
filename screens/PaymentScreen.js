@@ -88,7 +88,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.28)',
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.66)',
-    elevation: 20,
     justifyContent: 'center',
     alignItems: 'center',
   },

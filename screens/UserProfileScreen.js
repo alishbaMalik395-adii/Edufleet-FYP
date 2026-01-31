@@ -12,6 +12,8 @@ export default function UserProfileScreen({ navigation, route }) {
 
   // ✅ LOGIN SE AANE WALI EMAIL
   const userEmail = route?.params?.userEmail || "Not Available";
+  const regNo = route?.params?.regNo || "Not Available";
+  const userName = route?.params?.userName || "Not Available";
 
   return (
     <ImageBackground
@@ -34,13 +36,13 @@ export default function UserProfileScreen({ navigation, route }) {
           </View>
 
           {/* User Info */}
-          <Text style={styles.name}>Alishba Malik</Text>
+          <Text style={styles.name}>{userName}</Text>
           <Text style={styles.role}>Student</Text>
 
           {/* Info Rows */}
           <View style={styles.infoRow}>
             <Icon name="id-card-outline" size={22} color="#000" />
-            <Text style={styles.infoText}>Roll No: 21-CS-045</Text>
+            <Text style={styles.infoText}>Roll No: {regNo}</Text>
           </View>
 
           {/* ✅ EMAIL — DYNAMIC */}
@@ -102,7 +104,6 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255,255,255,0.28)",
     borderColor: "rgba(255,255,255,0.66)",
     borderWidth: 1,
-    elevation: 15,
     alignItems: "center",
   },
   avatarWrapper: {

@@ -1,35 +1,45 @@
-import React from "react";
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   FlatList,
   ImageBackground,
-} from "react-native";
-import Icon from "react-native-vector-icons/Ionicons";
-
-const notifications = [
-  {
-    id: "1",
-    title: "Route Update",
-    message: "Today's route has been updated by admin",
-    time: "2 min ago",
-  },
-  {
-    id: "2",
-    title: "Delay Alert",
-    message: "Bus will arrive 10 minutes late",
-    time: "10 min ago",
-  },
-  {
-    id: "3",
-    title: "Ride Reminder",
-    message: "Please start your ride on time",
-    time: "1 hour ago",
-  },
-];
+} from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { useNotifications } from '../context/NotificationContext';
 
 export default function DriverNotificationsScreen() {
+  const { notifications, isConnected, clearUnreadNotifications } = useNotifications();
+
+  // Clear unread notifications when screen opens
+  useEffect(() => {
+    clearUnreadNotifications();
+  }, []);
+
+  const defaultNotifications = [
+    {
+      id: "1",
+      title: "Route Update",
+      message: "Today's route has been updated by admin",
+      time: "2 min ago",
+    },
+    {
+      id: "2",
+      title: "Delay Alert",
+      message: "Bus will arrive 10 minutes late",
+      time: "10 min ago",
+    },
+    {
+      id: "3",
+      title: "Ride Reminder",
+      message: "Please start your ride on time",
+      time: "1 hour ago",
+    },
+  ];
+
+  // Combine real notifications with default ones
+  const allNotifications = [...notifications, ...defaultNotifications];
   return (
     <ImageBackground
       source={require("../assets/background.jpg")}
@@ -44,18 +54,21 @@ export default function DriverNotificationsScreen() {
         <Text style={styles.subtitle}>Admin & system alerts</Text>
 
         <FlatList
-          data={notifications}
+          data={allNotifications}
           keyExtractor={(item) => item.id}
           contentContainerStyle={{ paddingBottom: 30 }}
-          renderItem={({ item }) => (
+          renderItem={({ item, index }) => (
             <View style={styles.card}>
-              <Icon
-                name="notifications-outline"
-                size={26}
-                color="#ffd6d6"
-                style={{ marginRight: 12 }}
-              />
-
+              <View style={styles.iconContainer}>
+                <Icon
+                  name="notifications-outline"
+                  size={26}
+                  color="#ffd6d6"
+                />
+                {index === 0 && (
+                  <View style={styles.greenIndicator} />
+                )}
+              </View>
               <View style={{ flex: 1 }}>
                 <Text style={styles.cardTitle}>{item.title}</Text>
                 <Text style={styles.cardMsg}>{item.message}</Text>
@@ -126,5 +139,22 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: "#ddd",
     marginTop: 6,
+  },
+
+  iconContainer: {
+    marginRight: 12,
+    position: 'relative',
+  },
+
+  greenIndicator: {
+    position: 'absolute',
+    top: -2,
+    right: -2,
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: '#4CAF50',
+    borderWidth: 2,
+    borderColor: '#fff',
   },
 });

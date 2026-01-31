@@ -16,9 +16,8 @@ export default function MessagesScreen({ navigation }) {
     <ImageBackground
       source={require("../assets/background.jpg")}
       style={styles.bg}
-      blurRadius={1}   // ✅ same as dashboard
+      blurRadius={1}
     >
-      {/* 🔥 DARK OVERLAY */}
       <View style={styles.overlay} />
 
       <View style={styles.container}>
@@ -73,7 +72,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
-  // 🔥 SAME OVERLAY AS DASHBOARD
   overlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: "rgba(0,0,0,0.35)",
@@ -97,7 +95,6 @@ const styles = StyleSheet.create({
     marginBottom: 25,
   },
 
-  // 🔥 GLASS CHAT CARD
   chatCard: {
     flexDirection: "row",
     alignItems: "center",
@@ -109,7 +106,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.66)",
 
-    elevation: 18,
   },
 
   avatar: {

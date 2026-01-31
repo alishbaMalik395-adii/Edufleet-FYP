@@ -18,11 +18,11 @@ const ROUTE_COLORS = ["#FF5A5F", "#00A699", "#FFB400", "#007AFF", "#8E44AD"];
 export default function TrackingScreen() {
   // --- mock initial buses (five buses, different routes) ---
   const [buses, setBuses] = useState([
-    { id: "B1", busNo: "24B", route: "piplan,chashma→ Mianwali", lat: 33.6844, lng: 73.0479 }, // example coords
-    { id: "B2", busNo: "12A", route: "piplan,hernolimor → Mianwali", lat: 33.6890, lng: 73.0500 },
-    { id: "B3", busNo: "7C",  route: "kamarmoshani → Mianwali", lat: 33.6800, lng: 73.0400 },
-    { id: "B4", busNo: "3D",  route: "Kalabag→ Mianwali",  lat: 33.6905, lng: 73.0600 },
-    { id: "B5", busNo: "9X",  route: "Esakhail → Mianwali",  lat: 33.6750, lng: 73.0300 },
+    { id: "B1", busNo: "BUS-01", route: "piplan,chashma→ Mianwali", lat: 33.6844, lng: 73.0479 }, // example coords
+    { id: "B2", busNo: "BUS-02", route: "piplan,hernolimor → Mianwali", lat: 33.6890, lng: 73.0500 },
+    { id: "B3", busNo: "BUS-03",  route: "kamarmoshani → Mianwali", lat: 33.6800, lng: 73.0400 },
+    { id: "B4", busNo: "BUS-04",  route: "Kalabag→ Mianwali",  lat: 33.6905, lng: 73.0600 },
+    { id: "B5", busNo: "BUS-05",  route: "Esakhail → Mianwali",  lat: 33.6750, lng: 73.0300 },
   ]);
 
   const mapRef = useRef(null);
