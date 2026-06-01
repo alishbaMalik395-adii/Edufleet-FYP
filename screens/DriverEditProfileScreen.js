@@ -20,15 +20,21 @@ const DriverEditProfileScreen = () => {
       ? route.params.driverEmail
       : "";
 
+  const driverName =
+    route.params && route.params.driverName
+      ? route.params.driverName
+      : "Driver";
+
   // ✅ editable fields
-  const [name, setName] = useState("Driver");
+  const [name, setName] = useState(driverName);
   const [phone, setPhone] = useState("");
 
   const handleSave = () => {
     Alert.alert("✅ Profile Updated", "Your profile has been updated");
 
     navigation.navigate("DriverProfile", {
-      driverEmail: driverEmail, // 🔒 SAME EMAIL BACK
+      driverEmail: driverEmail,
+      driverName: name,
     });
   };
 

@@ -14,7 +14,7 @@ import Geolocation from "@react-native-community/geolocation";
 import Icon from "react-native-vector-icons/Ionicons";
 import axios from "axios";
 
-const API_BASE_URL = "http://192.168.1.90:5000/api";
+const API_BASE_URL = "http://10.49.78.126:5000/api";
 
 export default function DriverLiveMapScreen({ route }) {
   //console.log(" DriverLiveMapScreen opened");
@@ -262,6 +262,7 @@ export default function DriverLiveMapScreen({ route }) {
         <MapView
           ref={mapRef}
           style={{ flex: 1 }}
+          provider="google"
           showsUserLocation={true}
           followsUserLocation={true}
           region={{
@@ -310,7 +311,7 @@ const styles = StyleSheet.create({
     margin: 22,
     flex: 1,
     borderRadius: 22,
-    backgroundColor: "rgba(255,255,255,0.28)",
+    backgroundColor: "transparent",
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.6)",
     overflow: "hidden",
@@ -324,3 +325,4 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 });
+

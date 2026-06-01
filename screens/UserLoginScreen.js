@@ -15,10 +15,15 @@ import { useNavigation } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const API_BASE_URL = "http://192.168.1.90:5000/api";
+const API_BASE_URL = "http://10.49.78.126:5000/api";
 
-const UserLoginScreen = () => {
+const UserLoginScreen = ({ navigation, route }) => {
+  const { showBusScreen, userEmail: paramEmail, userName: paramName,
+          busId: paramBusId, studentId: paramStudentId,
+          regNo: paramRegNo } = route.params || {};
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [regNo, setRegNo] = useState('');
@@ -26,7 +31,6 @@ const UserLoginScreen = () => {
   const [loginSuccess, setLoginSuccess] = useState(false);
   const [assignedBus, setAssignedBus] = useState('');
   const [studentData, setStudentData] = useState(null);
-  const navigation = useNavigation();
 
   const handleLogin = async () => {
     // BASIC VALIDATION
@@ -52,9 +56,23 @@ const UserLoginScreen = () => {
       if (response.status === 200) {
         const student = response.data.student;
         setStudentData(student);
-        setAssignedBus(student.busNo);
-        setLoginSuccess(true);
+        const bus = student.busNo || assignedBus;
+        setAssignedBus(bus);
         Alert.alert('✅ Login Successful', `Welcome ${student.name}!`);
+        await AsyncStorage.setItem('userData', JSON.stringify({
+          id: student.id,
+          name: student.name,
+          email: email,
+          busId: bus,
+          regNo: regNo,
+        }));
+        navigation.navigate('StudentFaceDetection', {
+          userEmail: email,
+          regNo: regNo,
+          userName: student.name,
+          busId: bus,
+          studentId: student.id,
+        });
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -75,17 +93,19 @@ const UserLoginScreen = () => {
   };
 
   const handleContinueToDashboard = () => {
-    if (!assignedBus) {
+    const busToUse = paramBusId || assignedBus;
+    if (!busToUse) {
       Alert.alert("⚠️ No Bus Assigned", "Please contact admin for bus assignment");
       return;
     }
 
-    navigation.navigate("UserDashboard", {
-      userEmail: email,
-      regNo: regNo,
-      userName: studentData.name,
-      busId: assignedBus,
-      studentId: studentData.id
+    navigation.navigate('UserDashboard', {
+      userEmail: paramEmail || email,
+      regNo: paramRegNo || regNo,
+      userName: paramName || studentData?.name,
+      busId: busToUse,
+      studentId: paramStudentId || studentData?.id,
+      faceVerified: true,
     });
   };
 
@@ -98,7 +118,7 @@ const UserLoginScreen = () => {
         <Text style={styles.title}>User Login</Text>
         <Text style={styles.subtitle}>Login using your Gmail</Text>
 
-        {!loginSuccess ? (
+        {!loginSuccess && !showBusScreen ? (
           <>
             {/* EMAIL */}
             <TextInput
@@ -141,10 +161,10 @@ const UserLoginScreen = () => {
             {/* ASSIGNED BUS DISPLAY */}
             <View style={styles.assignedBusContainer}>
               <Text style={styles.assignedBusTitle}>Your Assigned Bus</Text>
-              {assignedBus ? (
+              {(paramBusId || assignedBus) ? (
                 <View style={styles.busDisplay}>
                   <Icon name="bus-outline" size={32} color="#2C3E50" />
-                  <Text style={styles.assignedBusText}>{assignedBus}</Text>
+                  <Text style={styles.assignedBusText}>{paramBusId || assignedBus}</Text>
                 </View>
               ) : (
                 <Text style={styles.noBusText}>No bus assigned</Text>
@@ -153,9 +173,9 @@ const UserLoginScreen = () => {
 
             {/* CONTINUE TO DASHBOARD BUTTON */}
             <TouchableOpacity 
-              style={[styles.button, !assignedBus && styles.buttonDisabled]} 
+              style={[styles.button, !(paramBusId || assignedBus) && styles.buttonDisabled]} 
               onPress={handleContinueToDashboard}
-              disabled={!assignedBus}
+              disabled={!(paramBusId || assignedBus)}
             >
               <Text style={styles.buttonText}>Continue to Dashboard</Text>
             </TouchableOpacity>

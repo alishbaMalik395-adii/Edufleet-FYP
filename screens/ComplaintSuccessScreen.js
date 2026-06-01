@@ -4,7 +4,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 
 export default function ComplaintSuccessScreen({ route, navigation }) {
 
-  const { rollNo, issueType, description } = route.params;
+  const { rollNo, issueType, description, complaintId } = route.params;
 
   return (
     <ImageBackground
@@ -28,7 +28,7 @@ export default function ComplaintSuccessScreen({ route, navigation }) {
           <Text style={styles.detail}>Description: {description}</Text>
 
           <Text style={styles.detail}>
-            Complaint ID: CMP-{Math.floor(Math.random() * 9000 + 1000)}
+            Complaint ID: {complaintId || `CMP-${Math.floor(Math.random() * 9000 + 1000)}`}
           </Text>
 
           <TouchableOpacity

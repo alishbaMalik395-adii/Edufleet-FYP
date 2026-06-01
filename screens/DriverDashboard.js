@@ -20,6 +20,7 @@ const DriverDashboard = () => {
   // 🔥 LOGIN SE AANE WALI ASSIGNED BUS ID
   const assignedBusId = route.params?.busId;
   const driverEmail = route.params?.driverEmail;
+  const driverName = route.params?.driverName;
 
   // ✅ STATES (ride ke baad wali cheezen)
   const [rideStarted, setRideStarted] = useState(false);
@@ -59,7 +60,8 @@ const DriverDashboard = () => {
 
               navigation.navigate("BusSelectionScreen", {
                 assignedBusId: assignedBusId, 
-                driverId: route.params?.driverId,// ✅ CORRECT
+                driverId: route.params?.driverId,
+                driverName: driverName,
               });
             }}
           />
@@ -92,6 +94,7 @@ const DriverDashboard = () => {
               navigation.navigate("MessagesScreen", {
                 role: "driver",
                 busId: assignedBusId,
+                userName: driverName,
               })
             }
           />
@@ -113,12 +116,9 @@ const DriverDashboard = () => {
           <GlassCard
             title="Route"
             icon="navigate-outline"
-            desc="Assigned Route"
+            desc="View All Routes"
             onPress={() => {
-              Alert.alert(
-                "Assigned Bus",
-                `Aap BUS-${assignedBusId} ke route par hain`
-              );
+              navigation.navigate("RouteSelectionScreen");
             }}
           />
 
@@ -131,6 +131,7 @@ const DriverDashboard = () => {
               navigation.navigate("DriverProfile", {
                 busId: assignedBusId,
                 driverEmail: driverEmail,
+                driverName: driverName,
               })
             }
           />

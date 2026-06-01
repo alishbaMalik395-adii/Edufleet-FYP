@@ -68,6 +68,7 @@ export default function BusSelectionScreen({ navigation, route }) {
       routeName: bus.route,
       busId: bus.id,
       driverId: route.params.driverId,
+      driverName: route.params.driverName,
     });
   };
 
@@ -83,7 +84,7 @@ export default function BusSelectionScreen({ navigation, route }) {
       <TouchableOpacity
         style={[
           styles.card,
-          !isAssigned && { opacity: 0.55 }, // 🔥 baqi buses thori fade
+          !isAssigned && { opacity: 0.55 }, // 
         ]}
         activeOpacity={0.85}
         onPress={() => handleBusPress(item)}
@@ -118,7 +119,7 @@ export default function BusSelectionScreen({ navigation, route }) {
       <View style={styles.container}>
         <Text style={styles.title}>Select Your Bus 🚌</Text>
         <Text style={styles.subtitle}>
-          Aap sirf apni assigned bus select kar sakti hain
+          You only enter the bus assigned to you 
         </Text>
 
         <FlatList

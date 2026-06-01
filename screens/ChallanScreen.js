@@ -1,16 +1,12 @@
 import React from 'react';
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ImageBackground
+  View, Text, StyleSheet, TouchableOpacity,
+  ImageBackground, SafeAreaView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useNavigation } from '@react-navigation/native';
 
-export default function ChallanScreen() {
-  const navigation = useNavigation();
+export default function ChallanScreen({ navigation, route }) {
+  const { userEmail, regNo, userName, busId, studentId } = route.params || {};
 
   return (
     <ImageBackground
@@ -19,100 +15,66 @@ export default function ChallanScreen() {
       blurRadius={1}
     >
       <View style={styles.overlay} />
-
-      <View style={styles.container}>
-        
-        {/* Heading */}
-        <Text style={styles.heading}>Challan Options</Text>
-        <Text style={styles.subHeading}>View or Download your challan</Text>
-
-        {/* VIEW BUTTON */}
-        <TouchableOpacity 
-          style={styles.button}
-          onPress={() => navigation.navigate("ViewChallan")}   // ⭐ Navigation added
-        >
-          <Icon name="eye-outline" size={28} color="#fff" />
-          <Text style={styles.buttonText}>View Challan</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-  style={styles.button}
-  onPress={() => navigation.navigate("DownloadChallan")}
->
-  <Icon name="download-outline" size={28} color="#fff" />
-  <Text style={styles.buttonText}>Download Challan</Text>
-</TouchableOpacity>
-
-
-        
-
-        {/* BACK BUTTON */}
+      <SafeAreaView style={styles.container}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-          <Icon name="arrow-back-outline" size={24} color="#fff" />
-          <Text style={styles.backText}>Back</Text>
+          <Icon name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
 
-      </View>
+        <Text style={styles.title}>Challan</Text>
+        <Text style={styles.subtitle}>View or download your fee challan</Text>
+
+        <View style={styles.cardContainer}>
+          <TouchableOpacity
+            style={styles.card}
+            onPress={() => navigation.navigate('ViewChallan', {
+              userEmail, regNo, userName, busId, studentId
+            })}
+          >
+            <Icon name="document-text-outline" size={40} color="#2196F3" />
+            <Text style={styles.cardTitle}>View Challan</Text>
+            <Text style={styles.cardDesc}>View your fee challan details</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.card}
+            onPress={() => navigation.navigate('DownloadChallan', {
+              userEmail, regNo, userName, busId, studentId
+            })}
+          >
+            <Icon name="download-outline" size={40} color="#4CAF50" />
+            <Text style={styles.cardTitle}>Download Challan</Text>
+            <Text style={styles.cardDesc}>Download PDF of your challan</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
     </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  bg: {
-    flex: 1,
-    width: "100%",
-    height: "100%",
-  },
-
+  bg: { flex: 1 },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.35)',
+    backgroundColor: 'rgba(0,0,0,0.4)',
   },
-
-  container: {
-    paddingTop: 90,
-    paddingHorizontal: 25,
+  container: { flex: 1, paddingHorizontal: 20 },
+  backBtn: { marginTop: 20, marginBottom: 10 },
+  title: {
+    color: '#fff', fontSize: 32, fontWeight: '800', marginBottom: 8,
   },
-
-  heading: {
-    fontSize: 32,
-    fontWeight: '800',
-    color: '#fff',
-  },
-
-  subHeading: {
-    color: "#e6e6e6",
-    marginTop: 5,
-    fontSize: 16,
-  },
-
-  button: {
-    marginTop: 30,
-    flexDirection: 'row',
-    gap: 12,
-    alignItems: 'center',
-    padding: 18,
-    borderRadius: 16,
-    backgroundColor: 'rgba(255, 255, 255, 0.22)',
+  subtitle: { color: '#ddd', fontSize: 15, marginBottom: 40 },
+  cardContainer: { gap: 20 },
+  card: {
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    borderRadius: 20,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.45)',
+    borderColor: 'rgba(255,255,255,0.3)',
+    padding: 30,
+    alignItems: 'center',
+    gap: 12,
   },
-
-  buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: '700',
+  cardTitle: {
+    color: '#fff', fontSize: 20, fontWeight: '700',
   },
-
-  backBtn: {
-    marginTop: 40,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-
-  backText: {
-    color: "#fff",
-    fontSize: 16,
-  },
+  cardDesc: { color: '#ddd', fontSize: 13, textAlign: 'center' },
 });

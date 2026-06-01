@@ -66,6 +66,7 @@ const DriverProfileScreen = () => {
           onPress={() =>
             navigation.navigate("DriverEditProfile", {
               driverEmail,
+              driverName,
             })
           }
         >

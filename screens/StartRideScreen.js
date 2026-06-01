@@ -12,7 +12,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 
 export default function StartRideScreen({ route, navigation }) {
   // ✅ SIRF EK DAFA params lo
-  const { busNo, routeName, busId, driverId } = route.params || {};
+  const { busNo, routeName, busId, driverId, driverName } = route.params || {};
 
   const [rideStarted, setRideStarted] = useState(false);
 
@@ -48,6 +48,7 @@ export default function StartRideScreen({ route, navigation }) {
           navigation.navigate("DriverDashboard", {
             rideStarted: false,
             busNo: null,
+            driverName: driverName,
           }),
       },
     ]);

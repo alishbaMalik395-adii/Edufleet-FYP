@@ -1,7 +1,9 @@
+import 'react-native-reanimated';
 import 'react-native-gesture-handler';
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import 'react-native-reanimated';
 
 // ===== PUSH NOTIFICATION =====
 import './src/config/PushNotification';
@@ -24,6 +26,9 @@ import ChatScreen from "./screens/ChatScreen";
 
 import DriverProfileScreen from "./screens/DriverProfileScreen";
 import DriverEditProfileScreen from "./screens/DriverEditProfileScreen";
+import DriverFaceDetectionScreen from "./screens/DriverFaceDetectionScreen";
+import StudentFaceDetectionScreen from "./screens/StudentFaceDetectionScreen";
+import DriverLoginSuccessScreen from "./screens/DriverLoginSuccessScreen";
 import StartRideScreen from "./screens/StartRideScreen";
 import ChallanScreen from "./screens/ChallanScreen";
 import DriverNotificationsScreen from "./screens/DriverNotificationsScreen";
@@ -104,9 +109,22 @@ export default function App() {
             name="DriverEditProfile"
             component={DriverEditProfileScreen}
           />
+          <Stack.Screen
+            name="DriverFaceDetection"
+            component={DriverFaceDetectionScreen}
+          />
+          <Stack.Screen
+            name="StudentFaceDetection"
+            component={StudentFaceDetectionScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="DriverLoginSuccess"
+            component={DriverLoginSuccessScreen}
+          />
         </Stack.Navigator>
-      </NavigationContainer>
-    </RideProvider>
+        </NavigationContainer>
+      </RideProvider>
     </NotificationProvider>
   );
 }
