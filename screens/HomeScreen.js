@@ -1,8 +1,7 @@
 // HomeScreen.js
 import React from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet, ImageBackground } from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet, ImageBackground, Alert } from 'react-native'; // ✅ Alert add kiya
 import { useNavigation } from '@react-navigation/native';
-
 
 import driverIcon from '../assets/driver.jpg';
 import adminIcon from '../assets/admin.jpg';
@@ -21,7 +20,13 @@ const HomeScreen = () => {
           {/* Admin */}
           <TouchableOpacity
             style={styles.iconBox}
-            onPress={() => navigation.navigate('AdminLogin')}
+            onPress={() =>
+              Alert.alert(
+                "Web Support Only",
+                "Admin login is only available on the website.",
+                [{ text: "OK" }]
+              )
+            } // ✅ Yeh change kiya, navigation hata diya
           >
             <Image source={adminIcon} style={styles.icon} />
             <Text style={styles.label}>Admin</Text>

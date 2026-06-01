@@ -1,151 +1,683 @@
-// Screens/DriverLoginScreen.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
 import {
+
   View,
+
   Text,
+
   TextInput,
+
   TouchableOpacity,
+
   ImageBackground,
+
   StyleSheet,
+
   Alert,
+
+  ActivityIndicator,
+
 } from "react-native";
+
 import { useNavigation } from "@react-navigation/native";
 
-const DriverLoginScreen = () => {
+import { Picker } from "@react-native-picker/picker";
+
+import axios from "axios";
+
+import Icon from "react-native-vector-icons/Ionicons";
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
+
+const API_BASE_URL = "http://10.49.78.126:5000/api";
+
+
+
+const DriverLoginScreen = ({ route }) => {
+
   const [email, setEmail] = useState("");
+
   const [password, setPassword] = useState("");
+
+  const [buses, setBuses] = useState([]);
+
+  const [selectedBus, setSelectedBus] = useState("");
+
+  const [driverId, setDriverId] = useState("");
+
+  const [driverName, setDriverName] = useState("");
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [loginSuccess, setLoginSuccess] = useState(false);
+
   const navigation = useNavigation();
 
-  const handleLogin = () => {
-    // BASIC VALIDATION
-    if (!email || !password) {
-      Alert.alert("⚠️ Missing Fields", "Please enter email and password");
-      return;
+  // Check if returning from face verification with assigned bus to show
+  const showAssignedBus = route?.params?.showAssignedBus || false;
+  const faceVerified = route?.params?.faceVerified || false;
+
+  // Set driver info when returning from face verification
+  useEffect(() => {
+    if (showAssignedBus && route?.params) {
+      setDriverId(route.params.driverId || '');
+      setEmail(route.params.driverEmail || '');
+      setDriverName(route.params.driverName || '');
+    }
+  }, [showAssignedBus, route?.params]);
+
+
+
+  // Fetch driver's assigned bus after successful login or when returning from face verification
+
+  useEffect(() => {
+
+    if ((loginSuccess && driverId) || (showAssignedBus && driverId)) {
+
+      fetchAssignedBus();
+
     }
 
-    if (!email.includes("@gmail.com")) {
-      Alert.alert("❌ Invalid Email", "Please use a valid Gmail address");
-      return;
+  }, [loginSuccess, driverId, showAssignedBus]);
+
+
+
+  const fetchAssignedBus = async () => {
+
+    try {
+
+      const response = await axios.get(`${API_BASE_URL}/drivers/${driverId}/buses`);
+
+      if (response.data.availableBuses) {
+
+        setBuses(response.data.availableBuses);
+
+        if (response.data.availableBuses.length === 1) {
+
+          setSelectedBus(response.data.availableBuses[0]);
+
+        }
+
+      }
+
+    } catch (error) {
+
+      console.error("Error fetching buses:", error);
+
+      Alert.alert("⚠️ Error", "Failed to fetch assigned bus");
+
     }
 
-    // ✅ FRONTEND LOGIN (Driver)
-    navigation.navigate("DriverDashboard", {
-      driverEmail: email, // 🔥 email pass ho rahi hai
-    });
   };
 
-  return (
-    <ImageBackground
-      source={require("../assets/background.jpg")}
-      style={styles.background}
-    >
-      <View style={styles.container}>
-        <Text style={styles.title}>Driver Login</Text>
-        <Text style={styles.subtitle}>
-          Login using your Gmail
-        </Text>
 
-        {/* EMAIL */}
-        <TextInput
-          style={styles.input}
-          placeholder="Enter Gmail"
-          placeholderTextColor="#999"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
 
-        {/* PASSWORD */}
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          placeholderTextColor="#999"
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
-        />
+  const handleLogin = async () => {
 
-        {/* LOGIN */}
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
+    if (!email) {
+
+      Alert.alert("⚠️ Missing Fields", "Please enter email");
+
+      return;
+
+    }
+
+
+
+    setIsLoading(true);
+
+    
+
+    try {
+
+      const response = await axios.post(`${API_BASE_URL}/drivers/login`, {
+
+        email: email.trim()
+
+      });
+
+
+
+      if (response.status === 200) {
+
+        const driverData = response.data.driver;
+
+        setDriverId(String(driverData.id));
+
+        setDriverName(driverData.name);
+
+        setLoginSuccess(true);
+
         
 
-        <TouchableOpacity
-           style={styles.backButton}
-           onPress={() => navigation.navigate('Home')} 
-          >
-            <Text style={styles.backText}> Back to Home</Text>
+        // Fetch assigned bus immediately
+
+        let assignedBus = null;
+
+        try {
+
+          const busResponse = await axios.get(`${API_BASE_URL}/drivers/${driverData.id}/buses`);
+
+          if (busResponse.data.availableBuses && busResponse.data.availableBuses.length > 0) {
+
+            setBuses(busResponse.data.availableBuses);
+
+            setSelectedBus(busResponse.data.availableBuses[0]); // Auto-select assigned bus
+            assignedBus = busResponse.data.availableBuses[0];
+
+          }
+
+        } catch (busError) {
+
+          console.error("Error fetching buses:", busError);
+
+        }
+
+        
+
+        Alert.alert("✅ Login Successful", `Welcome ${driverData.name}!`);
+        
+        await AsyncStorage.setItem('driverData', JSON.stringify({
+          id: driverData.id,
+          name: driverData.name,
+          busId: assignedBus,
+        }));
+        
+        // Navigate to face detection screen immediately
+        navigation.navigate("DriverFaceDetection", {
+          driverId: String(driverData.id),
+          driverEmail: email,
+          driverName: driverData.name
+        });
+
+      }
+
+    } catch (error) {
+
+      console.error("Login error:", error);
+
+      if (error.response) {
+
+        if (error.response.status === 401) {
+
+          Alert.alert("❌ Login Failed", "Driver not found. Only admin-added drivers can login.");
+
+        } else if (error.response.status === 400) {
+
+          Alert.alert("❌ Invalid Email", "Please enter a valid email address");
+
+        } else if (error.response.status === 404) {
+
+          Alert.alert("❌ Service Unavailable", "Login service not found. Please contact admin.");
+
+        } else {
+
+          Alert.alert("❌ Error", "Login failed. Please try again.");
+
+        }
+
+      } else {
+
+        Alert.alert("❌ Network Error", "Could not connect to server. Please check your connection.");
+
+      }
+
+    } finally {
+
+      setIsLoading(false);
+
+    }
+
+  };
+
+
+
+  const handleBusSelection = () => {
+
+    if (buses.length === 0) {
+
+      Alert.alert("⚠️ No Bus Assigned", "Please contact admin for bus assignment");
+
+      return;
+
+    }
+
+
+
+    navigation.replace("DriverDashboard", {
+
+      driverId: driverId,
+
+      driverEmail: email,
+
+      driverName: driverName,
+
+      busId: buses[0], // Use assigned bus
+      faceVerified: faceVerified,
+
+    });
+
+  };
+
+
+
+  return (
+
+    <ImageBackground
+
+      source={require("../assets/background.jpg")}
+
+      style={styles.background}
+
+    >
+
+      <View style={styles.container}>
+
+        <Text style={styles.title}>{showAssignedBus ? "Your Assigned Bus" : "Driver Login"}</Text>
+
+        <Text style={styles.subtitle}>{showAssignedBus ? "Click below to go to dashboard" : "Login using your registered email"}</Text>
+
+
+
+        {!loginSuccess && !showAssignedBus ? (
+
+          <>
+
+            {/* EMAIL */}
+
+            <TextInput
+
+              style={styles.input}
+
+              placeholder="Enter registered email"
+
+              placeholderTextColor="#999"
+
+              value={email}
+
+              onChangeText={setEmail}
+
+              keyboardType="email-address"
+
+              autoCapitalize="none"
+
+              editable={!isLoading}
+
+            />
+
+
+
+            {/* LOGIN BUTTON */}
+
+            <TouchableOpacity 
+
+              style={[styles.button, isLoading && styles.buttonDisabled]} 
+
+              onPress={handleLogin}
+
+              disabled={isLoading}
+
+            >
+
+              {isLoading ? (
+
+                <ActivityIndicator color="#fff" size="small" />
+
+              ) : (
+
+                <Text style={styles.buttonText}>Login</Text>
+
+              )}
+
             </TouchableOpacity>
 
-        
+          </>
+
+        ) : (
+
+          <>
+
+            {/* ASSIGNED BUS DISPLAY */}
+
+            <View style={styles.assignedBusContainer}>
+
+              <Text style={styles.assignedBusTitle}>Your Assigned Bus</Text>
+
+              {faceVerified && (
+                <View style={styles.verifiedBadge}>
+                  <Icon name="shield-checkmark" size={20} color="#4CAF50" />
+                  <Text style={styles.verifiedText}>Face Verified</Text>
+                </View>
+              )}
+
+              {buses.length > 0 ? (
+
+                <View style={styles.busDisplay}>
+
+                  <Icon name="bus-outline" size={32} color="#2C3E50" />
+
+                  <Text style={styles.assignedBusText}>{buses[0]}</Text>
+
+                </View>
+
+              ) : (
+
+                <Text style={styles.noBusText}>No bus assigned</Text>
+
+              )}
+
+            </View>
+
+
+
+            {/* CONTINUE TO DASHBOARD BUTTON */}
+
+            <TouchableOpacity 
+
+              style={[styles.button, buses.length === 0 && styles.buttonDisabled]} 
+
+              onPress={handleBusSelection}
+
+              disabled={buses.length === 0}
+
+            >
+
+              <Text style={styles.buttonText}>Go to Dashboard</Text>
+
+            </TouchableOpacity>
+
+          </>
+
+        )}
+
+
+
+        <TouchableOpacity
+
+          style={styles.backButton}
+
+          onPress={() => navigation.navigate("Home")}
+
+        >
+
+          <Text style={styles.backText}>Back to Home</Text>
+
+        </TouchableOpacity>
+
       </View>
+
     </ImageBackground>
+
   );
+
 };
 
-const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
 
-  container: {
-    backgroundColor: "rgba(255, 255, 255, 0.49)",
-    borderRadius: 25,
-    padding: 25,
-    width: "85%",
-    alignItems: "center",
-    elevation: 8,
-  },
-
-  title: {
-    fontSize: 36,
-    fontWeight: "bold",
-    color: '#2C3E50', // 🔥 Driver theme (green)
-    marginBottom: 10,
-  },
-
-  subtitle: {
-    fontSize: 18,
-    color: "#555",
-    marginBottom: 30,
-  },
-
-  input: {
-    width: "100%",
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 10,
-    padding: 12,
-    marginBottom: 15,
-    fontSize: 16,
-    backgroundColor: "#fff",
-  },
-
-  button: {
-    backgroundColor: '#2C3E50',
-    paddingVertical: 14,
-    borderRadius: 10,
-    width: "100%",
-    alignItems: "center",
-  },
-
-  buttonText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "600",
-  },
-  backButton: {
-    marginTop: 20,
-  },
-  backText:{
-    color: '#2C3E50',
-    fontSize: 16,
-    fontWeight:'600'
-  }
-});
 
 export default DriverLoginScreen;
+
+
+
+/* ================= STYLES (UNCHANGED) ================= */
+
+
+
+const styles = StyleSheet.create({
+
+  background: {
+
+    flex: 1,
+
+    justifyContent: "center",
+
+    alignItems: "center",
+
+  },
+
+
+
+  container: {
+
+    backgroundColor: "rgba(255, 255, 255, 0.49)",
+
+    borderRadius: 25,
+
+    padding: 25,
+
+    width: "85%",
+
+    alignItems: "center",
+
+  },
+
+
+
+  title: {
+
+    fontSize: 36,
+
+    fontWeight: "bold",
+
+    color: "#2C3E50",
+
+    marginBottom: 10,
+
+  },
+
+
+
+  subtitle: {
+
+    fontSize: 18,
+
+    color: "#555",
+
+    marginBottom: 30,
+
+  },
+
+
+
+  input: {
+
+    width: "100%",
+
+    borderWidth: 1,
+
+    borderColor: "#ccc",
+
+    borderRadius: 10,
+
+    padding: 12,
+
+    marginBottom: 15,
+
+    fontSize: 16,
+
+    backgroundColor: "#fff",
+
+  },
+
+
+
+  button: {
+
+    backgroundColor: "#2C3E50",
+
+    paddingVertical: 14,
+
+    borderRadius: 10,
+
+    width: "100%",
+
+    alignItems: "center",
+
+  },
+
+
+
+  buttonText: {
+
+    color: "#fff",
+
+    fontSize: 18,
+
+    fontWeight: "600",
+
+  },
+
+
+
+  backButton: {
+
+    marginTop: 20,
+
+  },
+
+
+
+  backText: {
+
+    color: "#2C3E50",
+
+    fontSize: 16,
+
+    fontWeight: "600",
+
+  },
+
+  pickerWrapper: {
+
+    width: "100%",
+
+    borderWidth: 1,
+
+    borderColor: "#ccc",
+
+    borderRadius: 10,
+
+    marginBottom: 15,
+
+    backgroundColor: "#fff",
+
+  },
+
+  buttonDisabled: {
+
+    backgroundColor: "#999",
+
+    opacity: 0.6,
+
+  },
+
+  busSelectionTitle: {
+
+    fontSize: 18,
+
+    color: "#2C3E50",
+
+    marginBottom: 15,
+
+    textAlign: "center",
+
+    fontWeight: "600",
+
+  },
+
+  assignedBusContainer: {
+
+    width: "100%",
+
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
+
+    borderRadius: 15,
+
+    padding: 20,
+
+    marginBottom: 20,
+
+    alignItems: "center",
+
+    borderWidth: 2,
+
+    borderColor: "#2C3E50",
+
+  },
+
+  assignedBusTitle: {
+
+    fontSize: 16,
+
+    color: "#2C3E50",
+
+    marginBottom: 10,
+
+    fontWeight: "600",
+
+  },
+
+  busDisplay: {
+
+    flexDirection: "row",
+
+    alignItems: "center",
+
+    backgroundColor: "#fff",
+
+    paddingHorizontal: 15,
+
+    paddingVertical: 10,
+
+    borderRadius: 10,
+
+    borderWidth: 1,
+
+    borderColor: "#ddd",
+
+  },
+
+  assignedBusText: {
+
+    fontSize: 18,
+
+    fontWeight: "700",
+
+    color: "#2C3E50",
+
+    marginLeft: 10,
+
+  },
+
+  verifiedBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#E8F5E8',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    marginBottom: 12,
+  },
+
+  verifiedText: {
+    fontSize: 14,
+    color: '#4CAF50',
+    fontWeight: '600',
+    marginLeft: 6,
+  },
+
+  noBusText: {
+
+    fontSize: 14,
+
+    color: "#e74c3c",
+
+    fontStyle: "italic",
+
+  },
+
+});
+
+

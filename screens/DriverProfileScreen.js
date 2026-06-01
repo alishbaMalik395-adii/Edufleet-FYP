@@ -10,13 +10,13 @@ import {
 import { useNavigation, useRoute } from "@react-navigation/native";
 
 const DriverProfileScreen = () => {
-  // ✅ hooks always on top
   const navigation = useNavigation();
   const route = useRoute();
 
-  // ✅ safe param access
-  const driverEmail =
-    route.params?.driverEmail ?? "Not Available";
+  // ✅ SECURE BACKEND DATA
+  const driverName = route.params?.driverName ?? "Not Available";
+  const driverEmail = route.params?.driverEmail ?? "Not Available";
+  const busId = route.params?.busId ?? "Not Assigned";
 
   const handleLogout = () => {
     Alert.alert("Logout", "Are you sure you want to logout?", [
@@ -37,34 +37,42 @@ const DriverProfileScreen = () => {
         <Text style={styles.title}>Driver Profile</Text>
         <Text style={styles.subtitle}>Account Information</Text>
 
+        {/* NAME */}
+        <View style={styles.infoBox}>
+          <Text style={styles.label}>Name</Text>
+          <Text style={styles.value}>{driverName}</Text>
+        </View>
+
+        {/* EMAIL */}
         <View style={styles.infoBox}>
           <Text style={styles.label}>Email</Text>
           <Text style={styles.value}>{driverEmail}</Text>
         </View>
 
+        {/* BUS ID */}
         <View style={styles.infoBox}>
-          <Text style={styles.label}>Role</Text>
-          <Text style={styles.value}>Driver</Text>
+          <Text style={styles.label}>Assigned Bus</Text>
+          <Text style={styles.value}>{busId}</Text>
         </View>
 
+        {/* STATUS */}
         <View style={styles.infoBox}>
           <Text style={styles.label}>Status</Text>
           <Text style={styles.value}>Active</Text>
         </View>
 
-        {/* ✅ EDIT PROFILE — NOW WORKING */}
         <TouchableOpacity
           style={styles.editButton}
           onPress={() =>
             navigation.navigate("DriverEditProfile", {
-              driverEmail: driverEmail,
+              driverEmail,
+              driverName,
             })
           }
         >
           <Text style={styles.editText}>Edit Profile</Text>
         </TouchableOpacity>
 
-        {/* LOGOUT */}
         <TouchableOpacity
           style={styles.logoutButton}
           onPress={handleLogout}
@@ -77,6 +85,7 @@ const DriverProfileScreen = () => {
 };
 
 export default DriverProfileScreen;
+
 
 const styles = StyleSheet.create({
   background: {
@@ -91,7 +100,6 @@ const styles = StyleSheet.create({
     padding: 25,
     width: "85%",
     alignItems: "center",
-    elevation: 8,
   },
 
   title: {

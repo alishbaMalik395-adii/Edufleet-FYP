@@ -11,47 +11,47 @@ import {
 import Icon from "react-native-vector-icons/Ionicons";
 
 export default function StartRideScreen({ route, navigation }) {
-
-  // ✅ RECEIVE DATA
-  const { busNo, routeName } = route.params || {};
+  // ✅ SIRF EK DAFA params lo
+  const { busNo, routeName, busId, driverId, driverName } = route.params || {};
 
   const [rideStarted, setRideStarted] = useState(false);
 
-  // ✅ START RIDE
+  // 🟢 START RIDE (frontend only, no backend)
   const handleStartRide = () => {
+    if (!busId || !driverId) {
+      Alert.alert("❌ Error", "Bus ID or Driver ID missing");
+      return;
+    }
+
     setRideStarted(true);
 
-    Alert.alert(
-      "✅ Ride Started",
-      `${busNo} is now live on route`,
-      [
-        {
-          text: "Open Live Map",
-          onPress: () => {
-            navigation.navigate("DriverLiveMap", {
-              rideStarted: true,   // 🔥 VERY IMPORTANT
-              busNo: busNo,
-            });
-          },
-        },
-      ]
-    );
+    Alert.alert("✅ Ride Started", "Ride started (demo mode)", [
+      {
+        text: "OK",
+        onPress: () =>
+          navigation.navigate("DriverLiveMap", {
+            rideStarted: true,
+            busId: busId,
+          }),
+      },
+    ]);
   };
 
-  // 🛑 END RIDE
+  // 🔴 END RIDE (frontend only)
   const handleEndRide = () => {
     setRideStarted(false);
 
-    Alert.alert(
-      "🛑 Ride Ended",
-      `${busNo} ride has ended`,
-      [
-        {
-          text: "OK",
-          onPress: () => navigation.goBack(),
-        },
-      ]
-    );
+    Alert.alert("🛑 Ride Ended", `${busNo} ride ended`, [
+      {
+        text: "OK",
+        onPress: () =>
+          navigation.navigate("DriverDashboard", {
+            rideStarted: false,
+            busNo: null,
+            driverName: driverName,
+          }),
+      },
+    ]);
   };
 
   return (
@@ -69,8 +69,8 @@ export default function StartRideScreen({ route, navigation }) {
         <View style={styles.card}>
           <Icon name="bus-outline" size={80} color="#fff" />
 
-          <Text style={styles.busNo}>{busNo || "BUS"}</Text>
-          <Text style={styles.route}>{routeName || "Assigned Route"}</Text>
+          <Text style={styles.busNo}>{busNo}</Text>
+          <Text style={styles.route}>{routeName}</Text>
 
           <View style={styles.statusRow}>
             <Icon
@@ -99,10 +99,10 @@ export default function StartRideScreen({ route, navigation }) {
     </ImageBackground>
   );
 }
+
+
 const styles = StyleSheet.create({
-  bg: {
-    flex: 1,
-  },
+  bg: { flex: 1 },
   overlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: "rgba(0,0,0,0.35)",
@@ -129,7 +129,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.6)",
     alignItems: "center",
-    elevation: 20,
   },
   busNo: {
     fontSize: 26,

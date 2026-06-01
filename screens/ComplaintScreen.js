@@ -6,6 +6,8 @@ import {
   TextInput,
   TouchableOpacity,
   ImageBackground,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
 
 import { Picker } from "@react-native-picker/picker";
@@ -15,6 +17,63 @@ export default function ComplaintScreen({ navigation }) {
   const [rollNo, setRollNo] = useState("");
   const [issueType, setIssueType] = useState("Bus Late");
   const [description, setDescription] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const submitComplaint = async () => {
+    if (!rollNo.trim() || !description.trim()) {
+      Alert.alert("Error", "Please fill in all fields");
+      return;
+    }
+
+    if (description.length < 10) {
+      Alert.alert("Error", "Description must be at least 10 characters long");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await fetch("http://10.49.78.126:5000/api/complaints", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          rollNo: rollNo.trim(),
+          issueType,
+          description: description.trim(),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        Alert.alert(
+          "Success",
+          "Complaint submitted successfully!",
+          [
+            {
+              text: "OK",
+              onPress: () =>
+                navigation.navigate("ComplaintSuccess", {
+                  rollNo,
+                  issueType,
+                  description,
+                  complaintId: data.complaintId,
+                }),
+            },
+          ]
+        );
+      } else {
+        Alert.alert("Error", data.message || "Failed to submit complaint");
+      }
+    } catch (error) {
+      console.error("Submit error:", error);
+      Alert.alert("Error", "Network error. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <ImageBackground
@@ -69,15 +128,14 @@ export default function ComplaintScreen({ navigation }) {
           {/* SUBMIT */}
           <TouchableOpacity
             style={styles.submitBtn}
-            onPress={() =>
-              navigation.navigate("ComplaintSuccess", {
-                rollNo,
-                issueType,
-                description,
-              })
-            }
+            onPress={submitComplaint}
+            disabled={loading}
           >
-            <Text style={styles.submitText}>Submit</Text>
+            {loading ? (
+              <ActivityIndicator color="#000" size="small" />
+            ) : (
+              <Text style={styles.submitText}>Submit</Text>
+            )}
           </TouchableOpacity>
 
         </View>
@@ -153,3 +211,4 @@ const styles = StyleSheet.create({
     color: "#000",
   },
 });
+

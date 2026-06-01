@@ -101,7 +101,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.66)",
 
-    elevation: 18,
   },
 
   iconWrap: {

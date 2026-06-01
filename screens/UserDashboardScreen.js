@@ -12,6 +12,9 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 const UserDashboardScreen = ({ navigation, route }) => {
   const userEmail = route?.params?.userEmail;
+  const assignedBusId = route?.params?.busId;
+  const regNo = route?.params?.regNo;
+  const userName = route?.params?.userName;
 
   return (
     <ImageBackground
@@ -34,14 +37,24 @@ const UserDashboardScreen = ({ navigation, route }) => {
             title="Challan"
             icon="document-text-outline"
             desc="View & Download"
-            onPress={() => navigation.navigate("Challan")}
+            onPress={() => navigation.navigate("Challan", {
+              userEmail: userEmail,
+              regNo: regNo,
+              userName: userName,
+              busId: assignedBusId,
+            })}
           />
 
           <GlassCard
             title="Payments"
             icon="card-outline"
             desc="Online Payments"
-            onPress={() => navigation.navigate("PaymentScreen")}
+            onPress={() => navigation.navigate("PaymentScreen", {
+              userEmail: userEmail,
+              regNo: regNo,
+              userName: userName,
+              busId: assignedBusId,
+            })}
           />
 
           <GlassCard
@@ -55,7 +68,14 @@ const UserDashboardScreen = ({ navigation, route }) => {
             title="Messages"
             icon="chatbubble-ellipses-outline"
             desc="Admin Alerts"
-            onPress={() => navigation.navigate("MessagesScreen")}
+            onPress={() =>
+              navigation.navigate("MessagesScreen", {
+                role: "user",
+                busId: assignedBusId,
+                regNo: regNo,
+                userName: userName || '',
+              })
+            }
           />
 
           <GlassCard
@@ -74,6 +94,8 @@ const UserDashboardScreen = ({ navigation, route }) => {
             onPress={() =>
   navigation.navigate("UserProfileScreen", {
     userEmail: userEmail,
+    regNo: route?.params?.regNo,
+    userName: route?.params?.userName,
   })
 }
 
@@ -146,7 +168,6 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.66)',
     backdropFilter: "blur(10px)", // iOS only
 
-    elevation: 20,
     shadowColor: "#000",
     shadowOpacity: 0.3,
     shadowRadius: 8,
