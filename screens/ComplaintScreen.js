@@ -33,7 +33,7 @@ export default function ComplaintScreen({ navigation }) {
     setLoading(true);
 
     try {
-      const response = await fetch("http://10.49.78.126:5000/api/complaints", {
+      const response = await fetch("http://192.168.1.90:5000/api/complaints", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -211,4 +211,5 @@ const styles = StyleSheet.create({
     color: "#000",
   },
 });
+
 

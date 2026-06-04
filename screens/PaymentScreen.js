@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const BACKEND_URL = 'http://10.49.78.126:5000';
+const BACKEND_URL = 'http://192.168.1.90:5000';
 
 export default function PaymentScreen({ navigation, route }) {
   const { userEmail, regNo, userName, busId, studentId } = route.params || {};
@@ -185,4 +185,5 @@ const styles = StyleSheet.create({
   },
   backText: { color: '#fff', fontSize: 16, fontWeight: '700' },
 });
+
 

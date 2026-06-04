@@ -14,7 +14,7 @@ import ImageResizer from '@bam.tech/react-native-image-resizer';
 
 const { width } = Dimensions.get('window');
 const CIRCLE_SIZE = width * 0.75;
-const BACKEND_URL = 'http://10.49.78.126:5000';
+const BACKEND_URL = 'http://192.168.1.90:5000';
 
 export default function StudentFaceDetectionScreen({ navigation, route }) {
   const { studentId, userEmail, regNo, userName, busId } = route.params || {};
@@ -390,4 +390,5 @@ const styles = StyleSheet.create({
   btn: { backgroundColor: '#2196F3', padding: 10, borderRadius: 8 },
   btnText2: { color: '#fff' },
 });
+
 
