@@ -256,7 +256,7 @@ export default function MessagesScreen({ navigation, route }) {
 
         try {
 
-          const response = await fetch(`http://10.49.78.126:5000/api/messages/${assignedRouteId}`);
+          const response = await fetch(`http://192.168.1.90:5000/api/messages/${assignedRouteId}`);
 
           if (response.ok) {
 
@@ -350,7 +350,7 @@ export default function MessagesScreen({ navigation, route }) {
 
     // Initialize socket connection
 
-    const newSocket = io('http://10.49.78.126:5000', {
+    const newSocket = io('http://192.168.1.90:5000', {
 
       transports: ['websocket', 'polling'],
 
@@ -951,5 +951,6 @@ const styles = StyleSheet.create({
   },
 
 });
+
 
 

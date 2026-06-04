@@ -13,7 +13,7 @@ import {
 import FaceDetection from '@react-native-ml-kit/face-detection';
 import ImageResizer from '@bam.tech/react-native-image-resizer';
 
-const BACKEND_URL = 'http://10.49.78.126:5000';
+const BACKEND_URL = 'http://192.168.1.90:5000';
 const { width, height } = Dimensions.get('window');
 
 export default function DriverFaceDetectionScreen({ navigation, route }) {
@@ -552,4 +552,5 @@ const styles = StyleSheet.create({
   btn: { backgroundColor: '#2196F3', padding: 10, borderRadius: 8 },
   btnText: { color: '#fff' },
 });
+
 

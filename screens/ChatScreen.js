@@ -84,9 +84,9 @@ export default function ChatScreen({ route }) {
 
   // Backend server URL
 
-  const SERVER_URL = "http://10.49.78.126:5000";
+  const SERVER_URL = "http://192.168.1.90:5000";
 
-  const ADMIN_PORTAL_URL = "http://10.49.78.126:5000";
+  const ADMIN_PORTAL_URL = "http://192.168.1.90:5000";
 
 
 
@@ -1086,5 +1086,6 @@ const styles = StyleSheet.create({
   },
 
 });
+
 
 

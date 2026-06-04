@@ -3,7 +3,7 @@ import {
   View, Text, StyleSheet, ActivityIndicator, ImageBackground,
 } from 'react-native';
 
-const BACKEND_URL = 'http://10.49.78.126:5000';
+const BACKEND_URL = 'http://192.168.1.90:5000';
 
 export default function PaymentProcessingScreen({ navigation, route }) {
   const { method, challanId, amount, month, userEmail, regNo, userName, busId } = route.params || {};
@@ -80,4 +80,5 @@ const styles = StyleSheet.create({
   sub: { color: '#ddd', fontSize: 16, marginTop: 8 },
   amount: { color: '#fff', fontSize: 28, fontWeight: '800', marginTop: 12 },
 });
+
 

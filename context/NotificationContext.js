@@ -5,8 +5,8 @@ import io from 'socket.io-client';
 import notifee, { AndroidImportance } from '@notifee/react-native';
 
 const NotificationContext = createContext();
-//const SERVER_URL = 'http://10.49.78.126:5000';
-const SERVER_URL = 'http://10.49.78.126:5000';
+//const SERVER_URL = 'http://192.168.1.90:5000';
+const SERVER_URL = 'http://192.168.1.90:5000';
 
 const ROUTE_MAPPING = {
   '01': 'R1', '1': 'R1',
@@ -373,3 +373,4 @@ export const NotificationProvider = ({ children }) => {
     </NotificationContext.Provider>
   );
 };
+

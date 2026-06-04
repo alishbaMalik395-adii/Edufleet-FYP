@@ -17,7 +17,7 @@ import axios from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const API_BASE_URL = "http://10.49.78.126:5000/api";
+const API_BASE_URL = "http://192.168.1.90:5000/api";
 
 const UserLoginScreen = ({ navigation, route }) => {
   const { showBusScreen, userEmail: paramEmail, userName: paramName,
@@ -299,3 +299,4 @@ noBusText: {
 });
 
 export default UserLoginScreen;
+

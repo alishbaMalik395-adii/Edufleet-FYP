@@ -135,7 +135,7 @@ const DriverFaceDetectionScreen = ({ route }) => {
       console.log("Sending face registration:", { driverId: mockDriverId, faceData });
 
       // Register face data to backend
-      const response = await fetch('http://10.49.78.126:5000/api/drivers/register-face', {
+      const response = await fetch('http://192.168.1.90:5000/api/drivers/register-face', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -733,4 +733,5 @@ const styles = StyleSheet.create({
 });
 
 export default DriverFaceDetectionScreen;
+
 
